@@ -33,14 +33,6 @@ class MyHandler(FileSystemEventHandler):
                     # If there is a Title field, rename the PDF file
                     if not pdf_temp.Title is None and pdf_temp.Title != '()':
                         new_filename = pdf_temp.Title[1:len(pdf_temp.Title)-1]
-                        # Check for forbidden character '-' (OneDrive issue)
-                        while new_filename.find('-') > -1:
-                            tmp = new_filename.find('-')
-                            new_filename = new_filename[0:tmp] + new_filename[tmp+1:len(new_filename)]
-                        # Check for forbidden character ':' (OneDrive issue)
-                        while new_filename.find(':') > -1:
-                            tmp = new_filename.find(':')
-                            new_filename = new_filename[0:tmp] + new_filename[tmp+1:len(new_filename)]
                         new_filename = new_filename + ".pdf"
                         new_destination = folder_destination + "/" + new_filename + ".pdf"
                         # Echo message (renamed file)
@@ -49,6 +41,17 @@ class MyHandler(FileSystemEventHandler):
                         new_destination = folder_destination + "/" + filename
                         # Echo message
                         print(">> Paper recognized: ", filename)
+                        
+                    # Check for forbidden character '-' (OneDrive issue)
+                    while new_filename.find('-') > -1:
+                        tmp = new_filename.find('-')
+                        new_filename = new_filename[0:tmp] + new_filename[tmp+1:len(new_filename)]
+                    # Check for forbidden character ':' (OneDrive issue)
+                    while new_filename.find(':') > -1:
+                        tmp = new_filename.find(':')
+                        new_filename = new_filename[0:tmp] + new_filename[tmp+1:len(new_filename)]
+                        
+                    # Move the file
                     os.rename(src, new_destination)
 
 event_handler = MyHandler()
